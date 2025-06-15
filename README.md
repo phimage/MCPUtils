@@ -43,6 +43,12 @@ let claudeResult = await toolService.loadClaudeMCPTools(logger: logger)
 let vscodeResult = await toolService.loadVSCodeMCPTools(logger: logger)
 ```
 
+### Get tools ready for Apple's FoundationModels
+
+```swift
+let tools: [any FoundationModels.Tool] = result.foundationModelsTools
+```
+
 ## Configuration Files
 
 MCPUtils automatically discovers MCP servers from standard configuration locations:
