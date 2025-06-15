@@ -23,21 +23,24 @@ let logger = Logger(label: "your.app.mcp")
 let toolService = ToolService()
 
 // Load all available tools
-let tools = await toolService.loadTools(logger: logger)
+let result = await toolService.loadTools(logger: logger)
 
 // Use tools with Foundation Models
-for tool in tools {
-    print("Available tool: \(tool.name) - \(tool.description)")
+for (clientName, tools) in result.tools {
+    print("Client: \(clientName)")
+    for tool in tools {
+        print("  Tool: \(tool.name) - \(tool.description)")
+    }
 }
 ```
 ### Loading Tools from Specific Sources
 
 ```swift
 // Load only Claude MCP tools
-let claudeTools = await toolService.loadClaudeMCPTools(logger: logger)
+let claudeResult = await toolService.loadClaudeMCPTools(logger: logger)
 
 // Load only VS Code MCP tools
-let vscodeTools = await toolService.loadVSCodeMCPTools(logger: logger)
+let vscodeResult = await toolService.loadVSCodeMCPTools(logger: logger)
 ```
 
 ## Configuration Files
