@@ -21,9 +21,9 @@ import Logging
 
 /// Configuration for an MCP server
 public struct MCPServerConfig: Codable, Sendable {
-    public let type: String
+    public let type: String?
     public let command: String?
-    public let args: [String]
+    public let args: [String]?
     public let env: [String: String]?
     public let url: String?
     public let headers: [String: String]?
@@ -31,12 +31,12 @@ public struct MCPServerConfig: Codable, Sendable {
     public init(
         type: String? = nil, 
         command: String? = nil, 
-        args: [String] = [], 
+        args: [String]? = [],
         env: [String: String]? = nil,
         url: String? = nil,
         headers: [String: String]? = nil
     ) {
-        self.type = type ?? "stdio"
+        self.type = type
         self.command = command
         self.args = args
         self.env = env
@@ -67,6 +67,7 @@ public enum MCPConfigurationError: LocalizedError {
 extension MCPServerConfig {
     
     func createTransport(logger: Logger) throws -> MCP.Transport {
+        let type = self.type ?? "stdio"
         switch type.lowercased() {
         case "stdio":
             let process = try createProcess()
@@ -152,7 +153,7 @@ extension MCPServerConfig {
         
         // Construct arguments: command followed by its arguments
         var processArgs = [command]
-        processArgs.append(contentsOf: args)
+        processArgs.append(contentsOf: args ?? [])
         process.arguments = processArgs
         
         // Set environment variables if specified
