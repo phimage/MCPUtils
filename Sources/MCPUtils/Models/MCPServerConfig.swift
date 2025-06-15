@@ -34,7 +34,7 @@ public struct MCPServerConfig: Codable, Sendable {
     ///   - name: The name identifier for this server
     ///   - logger: Logger instance for debugging
     /// - Returns: Array of tools provided by the server
-    public func createTools(named name: String, logger: Logger) async throws -> [MCP.Tool] {
+    public func createTools(named name: String, logger: Logger) async throws -> (MCP.Client, [MCP.Tool]) {
         logger.debug("Starting MCP server: \(name)")
         
         let process = try createProcess()
@@ -71,7 +71,7 @@ public struct MCPServerConfig: Codable, Sendable {
         return process
     }
     
-    private func loadToolsFromClient(_ client: Client, logger: Logger) async throws -> [MCP.Tool] {
+    private func loadToolsFromClient(_ client: Client, logger: Logger) async throws -> (MCP.Client, [MCP.Tool])  {
         var allTools: [MCP.Tool] = []
         var cursor: String? = nil
         
@@ -86,6 +86,6 @@ public struct MCPServerConfig: Codable, Sendable {
         } while cursor != nil
         
         logger.debug("Loaded \(allTools.count) tools from MCP server")
-        return allTools
+        return (client, allTools)
     }
 }
