@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:FoundationModelCli}",
+            "name": "Debug fm",
+            "program": "${workspaceFolder:FoundationModelCli}/.build/debug/fm",
+            "preLaunchTask": "swift: Build Debug fm"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:FoundationModelCli}",
+            "name": "Release fm",
+            "program": "${workspaceFolder:FoundationModelCli}/.build/release/fm",
+            "preLaunchTask": "swift: Build Release fm"
+        }
+    ]
+}
