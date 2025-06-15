@@ -165,3 +165,11 @@ public struct MCPWrapperTool: FoundationModels.Tool {
         return text
     }
 }
+
+extension ToolService.Result {
+    public var foundationModelsTools: [MCPWrapperTool] {
+       return tools.flatMap { clientName, toolArray in
+            toolArray.map { MCPWrapperTool($0, mcpClient: clients[clientName]!) }
+       }
+    }
+}
