@@ -54,8 +54,8 @@ public struct MCPWrapperTool: FoundationModels.Tool {
     
     // MARK: - Properties
     
-    private let mcpTool: MCP.Tool
-    private let mcpClient: MCP.Client
+    public let mcpTool: MCP.Tool
+    public let mcpClient: MCP.Client
     
     public var name: String {
         mcpTool.name
