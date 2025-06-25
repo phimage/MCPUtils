@@ -56,7 +56,10 @@ public struct ToolService {
         
         // Load tools from VS Code MCP servers
         tools.append(contentOf: await loadVSCodeMCPTools(logger: logger))
-        
+
+        // Load tools from Current App configuration
+        tools.append(contentOf: await loadCurrentAppMCPTools(logger: logger))
+
         // TODO: Add other tool sources here (local tools, APIs, etc.)
         
         logger.debug("Loaded \(tools.count) tools total")
@@ -119,6 +122,33 @@ public struct ToolService {
             
         } catch {
             logger.error("Error loading VS Code configuration: \(error.localizedDescription)")
+        }
+        
+        return tools
+    }
+    
+    public func loadCurrentAppMCPTools(logger: Logger) async -> Result {
+        var tools: Result = Result()
+        
+        do {
+            let currentAppConfig = try CurrentAppConfigService.loadConfig(logger: logger)
+            
+            for (serverName, serverConfig) in currentAppConfig.servers {
+                do {
+                    let (client, serverTools) = try await serverConfig.createTools(named: serverName, logger: logger)
+                    tools.append(client: client, tools: serverTools)
+                    logger.debug("Loaded \(serverTools.count) tools from current app MCP server: \(serverName)")
+                } catch {
+                    logger.error("Failed to load tools from current app MCP server '\(serverName)': \(error.localizedDescription)")
+                }
+            }
+            
+            if !currentAppConfig.servers.isEmpty {
+                logger.debug("Loaded \(tools.count) current app MCP tools from \(currentAppConfig.servers.count) servers")
+            }
+            
+        } catch {
+            logger.error("Error loading current app configuration: \(error.localizedDescription)")
         }
         
         return tools
